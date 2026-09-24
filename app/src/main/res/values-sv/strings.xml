@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">BatchKit</string>
+    <string name="tile_label">BatchKit Stopp</string>
+
+    <!-- Navigation -->
+    <string name="nav_apps">Appar</string>
+    <string name="nav_profiles">Profiler</string>
+    <string name="nav_shizuku">Shizuku</string>
+    <string name="nav_settings">Inställningar</string>
+
+    <!-- App List & Search -->
+    <string name="search_hint">Sök appar eller paketnamn…</string>
+    <string name="filter_all">Alla</string>
+    <string name="filter_user">Användare</string>
+    <string name="filter_system">System</string>
+    <string name="filter_running">Körs</string>
+    <string name="filter_frozen">Frysta</string>
+    <string name="sort_by">Sortera efter</string>
+    <string name="sort_name_asc">Namn (A–Ö)</string>
+    <string name="sort_name_desc">Namn (Ö–A)</string>
+    <string name="sort_package">Paketnamn</string>
+    <string name="sort_install_date">Installationsdatum (nyast)</string>
+    <string name="sort_last_update">Senast uppdaterad</string>
+    <string name="select_all">Markera alla filtrerade</string>
+    <string name="deselect_all">Rensa markering</string>
+    <string name="invert_selection">Invertera markering</string>
+    <string name="apps_selected">%1$d markerade</string>
+    <string name="no_apps_found">Inga matchande appar hittades</string>
+    <string name="loading_apps">Läser in installerade appar…</string>
+
+    <!-- Badges -->
+    <string name="badge_system">SYSTEM</string>
+    <string name="badge_admin">ADMIN</string>
+    <string name="badge_protected">SKYDDAD</string>
+    <string name="badge_running">KÖRS</string>
+    <string name="badge_frozen">FRYST</string>
+
+    <!-- Actions -->
+    <string name="action_force_stop">Tvinga stopp</string>
+    <string name="action_force_stop_desc">Avsluta alla aktiva processer omedelbart</string>
+    <string name="action_block_background">Blockera bakgrundsaktivitet</string>
+    <string name="action_block_background_desc">Sätt RUN_IN_BACKGROUND appop till IGNORERA</string>
+    <string name="action_block_any_background">Blockera ALL bakgrundsaktivitet</string>
+    <string name="action_block_any_background_desc">Sätt RUN_ANY_IN_BACKGROUND appop till IGNORERA</string>
+    <string name="action_restore_background">Återställ bakgrundsaktivitet</string>
+    <string name="action_restore_background_desc">Tillåt appar att utföra normala bakgrundsuppgifter</string>
+    <string name="action_freeze">Frys / Inaktivera</string>
+    <string name="action_freeze_desc">Inaktivera app och dölj från hemskärmen</string>
+    <string name="action_unfreeze">Tina upp / Aktivera</string>
+    <string name="action_unfreeze_desc">Återställ inaktiverad app till normalt läge</string>
+    <string name="action_battery_exempt">Undanta från batterioptimering</string>
+    <string name="action_battery_exempt_desc">Lägg till i Doze-vitlistan (obegränsad batteri)</string>
+    <string name="action_battery_restrict">Tillämpa batterioptimering</string>
+    <string name="action_battery_restrict_desc">Ta bort från Doze-vitlistan (optimerad batteri)</string>
+    <string name="action_clear_cache">Rensa app-cache</string>
+    <string name="action_clear_cache_desc">Rensa cachelagrad data för markerade appar</string>
+    <string name="action_notifications_off">Inaktivera aviseringar</string>
+    <string name="action_notifications_off_desc">Blockera aviseringar från markerade appar</string>
+    <string name="action_notifications_on">Aktivera aviseringar</string>
+    <string name="action_notifications_on_desc">Tillåt aviseringar för markerade appar</string>
+    <string name="action_batch_menu">Tillämpa batchåtgärd</string>
+
+    <!-- Confirmations & Dialogs -->
+    <string name="confirm_action_title">Bekräfta åtgärd: %1$s</string>
+    <string name="confirm_action_message">Du är på väg att utföra %1$s på %2$d markerade appar.\n\nDestruktiva åtgärder kan inaktivera systemfunktioner eller dölja ikoner.</string>
+    <string name="confirm_safe_mode_warning">Säkert läge är aktiverat för att skydda systemet. Destruktiva åtgärder som Frys och Rensa cache kräver att säkert läge avaktiveras i Inställningar.</string>
+    <string name="confirm_proceed">Fortsätt</string>
+    <string name="confirm_cancel">Avbryt</string>
+
+    <!-- Execution & Results -->
+    <string name="executing_batch">Tillämpar åtgärder…</string>
+    <string name="batch_completed">Batchåtgärd klar</string>
+    <string name="results_title">Körningsresultat</string>
+    <string name="results_summary">%1$d lyckades • %2$d misslyckades • %3$d hoppades över</string>
+    <string name="results_status_success">Lyckades</string>
+    <string name="results_status_failure">Misslyckades</string>
+    <string name="results_status_skipped">Överhoppad</string>
+    <string name="results_retry_failed">Försök igen med misslyckade appar</string>
+    <string name="results_done">Klar</string>
+    <string name="filter_results_all">Alla (%1$d)</string>
+    <string name="filter_results_success">Lyckade (%1$d)</string>
+    <string name="filter_results_failed">Misslyckade (%1$d)</string>
+    <string name="filter_results_skipped">Överhoppade (%1$d)</string>
+    <string name="reason_protected">Appen är skyddad och kan inte ändras.</string>
+    <string name="reason_device_admin">Appen är en aktiv enhetsadministratör och kan inte frysas eller stoppas.</string>
+    <string name="reason_safe_mode">Åtgärd blockerad av säkert läge. Slå av säkert läge i Inställningar för att låsa upp.</string>
+
+    <!-- Shizuku Lifecycle & Setup -->
+    <string name="shizuku_ready">Shizuku redo</string>
+    <string name="shizuku_not_running">Shizuku körs inte</string>
+    <string name="shizuku_denied">Behörighet nekad</string>
+    <string name="shizuku_not_installed">Shizuku ej installerad</string>
+    <string name="shizuku_title">Shizuku Privilegierad Brygga</string>
+    <string name="shizuku_status_label">Nuvarande status</string>
+    <string name="shizuku_version_label">Shizuku-version: %1$d</string>
+    <string name="shizuku_uid_label">Tjänst-UID: %1$d (%2$s)</string>
+    <string name="btn_request_permission">Begär Shizuku-behörighet</string>
+    <string name="btn_open_shizuku">Öppna Shizuku-appen</string>
+    <string name="btn_refresh_status">Uppdatera status</string>
+
+    <string name="guide_title">Installationsguide för Trådlös felsökning</string>
+    <string name="guide_step_1_title">1. Aktivera Utvecklaralternativ</string>
+    <string name="guide_step_1_desc">Gå till Inställningar &gt; Om telefonen. Tryck på \'Versionsnummer\' 7 gånger tills Utvecklaralternativ låses upp.</string>
+    <string name="guide_step_2_title">2. Aktivera Trådlös felsökning</string>
+    <string name="guide_step_2_desc">Öppna Inställningar &gt; System &gt; Utvecklaralternativ. Aktivera \'Trådlös felsökning\' och anslut till ett Wi-Fi-nätverk.</string>
+    <string name="guide_step_3_title">3. Parkoppla enhet i Shizuku</string>
+    <string name="guide_step_3_desc">Öppna Shizuku-appen, tryck på \'Parkoppling\', växla till Utvecklaralternativ &gt; \'Parkoppla enhet med parkopplingskod\'. Ange koden i Shizukus avisering.</string>
+    <string name="guide_step_4_title">4. Starta Shizuku-tjänsten</string>
+    <string name="guide_step_4_desc">Gå tillbaka till Shizuku och tryck på \'Starta\'. Shizuku körs nu i ADB-skalläge (UID 2000).</string>
+
+    <string name="quirks_title">Tillverkarspecifika tips &amp; Felsökning</string>
+    <string name="quirk_xiaomi_title">Xiaomi / HyperOS / MIUI</string>
+    <string name="quirk_xiaomi_desc">Du måste aktivera \'USB-felsökning (Säkerhetsinställningar)\' under Utvecklaralternativ. Kräver SIM-kort och inloggat Mi-konto en gång.</string>
+    <string name="quirk_oppo_title">OPPO / Realme / OnePlus (ColorOS)</string>
+    <string name="quirk_oppo_desc">Inaktivera \'Behörighetsövervakning\' i Utvecklaralternativ för att förhindra att ColorOS återkallar ADB-behörigheter.</string>
+    <string name="quirk_reboot_title">Information om enhetsomstart</string>
+    <string name="quirk_reboot_desc">Android avslutar Shizuku-processer vid omstart. Öppna Shizuku och tryck Starta via Trådlös felsökning igen (ingen dator krävs!).</string>
+
+    <!-- Profiles -->
+    <string name="profiles_title">Åtgärdsprofiler</string>
+    <string name="profiles_empty">Inga profiler skapade än. Skapa en profil för att utföra flera åtgärder på valda appar med ett enda tryck.</string>
+    <string name="create_profile">Skapa profil</string>
+    <string name="profile_name_hint">Profilnamn (t.ex. Nattfrysning: socialt)</string>
+    <string name="profile_desc_hint">Beskrivning (valfri)</string>
+    <string name="profile_select_apps">Välj appar (%1$d valda)</string>
+    <string name="profile_select_actions">Välj åtgärder (%1$d valda)</string>
+    <string name="profile_run">Kör nu</string>
+    <string name="profile_delete">Ta bort profil</string>
+    <string name="profile_delete_confirm">Vill du ta bort profilen \'%1$s\'?</string>
+    <string name="profile_created">Profil skapad</string>
+    <string name="profile_executed">Profil \'%1$s\' har körts</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Inställningar</string>
+    <string name="settings_group_safety">Säkerhet &amp; Skydd</string>
+    <string name="setting_safe_mode">Säkert läge</string>
+    <string name="setting_safe_mode_desc">Begränsar destruktiva åtgärder (Frys, Rensa cache) och skyddar kritiska appar</string>
+    <string name="dialog_disable_safemode_title">Inaktivera säkert läge?</string>
+    <string name="dialog_disable_safemode_message">Om säkert läge inaktiveras kan appar frysas och inaktiveras. Att inaktivera viktiga systemappar kan orsaka instabilitet. Fortsätt med försiktighet.</string>
+    <string name="setting_show_system">Visa systemappar</string>
+    <string name="setting_show_system_desc">Inkludera Android-ramverk och förinstallerade tillverkarappar i listan</string>
+    <string name="settings_group_display">Utseende</string>
+    <string name="setting_theme">Tema</string>
+    <string name="theme_system">Följ systemet</string>
+    <string name="theme_light">Ljust</string>
+    <string name="theme_dark">Mörkt</string>
+    <string name="settings_group_about">Om BatchKit</string>
+    <string name="about_version">Version 1.0.0</string>
+    <string name="about_desc">Privilegierad batchhantering av Android-appar via Shizuku ADB. Gratis, öppen källkod, 100% offline utan spårning.</string>
+    <string name="about_shizuku_link">Drivs av Rikkas Shizuku-ramverk</string>
+</resources>

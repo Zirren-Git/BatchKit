@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Batch layers icon: multiple stacked items with a lightning bolt / power toggle -->
+    <path
+        android:fillColor="#82F8CD"
+        android:pathData="M30,32h48c2.2,0 4,1.8 4,4v8c0,2.2 -1.8,4 -4,4H30c-2.2,0 -4,-1.8 -4,-4v-8c0,-2.2 1.8,-4 4,-4z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,48h48c2.2,0 4,1.8 4,4v8c0,2.2 -1.8,4 -4,4H30c-2.2,0 -4,-1.8 -4,-4v-8c0,-2.2 1.8,-4 4,-4z" />
+    <path
+        android:fillColor="#82F8CD"
+        android:pathData="M30,64h48c2.2,0 4,1.8 4,4v8c0,2.2 -1.8,4 -4,4H30c-2.2,0 -4,-1.8 -4,-4v-8c0,-2.2 1.8,-4 4,-4z" />
+    <!-- Thunderbolt overlay in center -->
+    <path
+        android:fillColor="#002116"
+        android:pathData="M56,38L44,56h8l-4,14 16,-18h-8z" />
+</vector>

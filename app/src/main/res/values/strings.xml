@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">BatchKit</string>
+    <string name="tile_label">BatchKit Stop</string>
+
+    <!-- Navigation -->
+    <string name="nav_apps">Apps</string>
+    <string name="nav_profiles">Profiles</string>
+    <string name="nav_shizuku">Shizuku</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- App List & Search -->
+    <string name="search_hint">Search apps or packages…</string>
+    <string name="filter_all">All</string>
+    <string name="filter_user">User</string>
+    <string name="filter_system">System</string>
+    <string name="filter_running">Running</string>
+    <string name="filter_frozen">Frozen</string>
+    <string name="sort_by">Sort by</string>
+    <string name="sort_name_asc">Name (A–Z)</string>
+    <string name="sort_name_desc">Name (Z–A)</string>
+    <string name="sort_package">Package name</string>
+    <string name="sort_install_date">Install date (Newest)</string>
+    <string name="sort_last_update">Last updated</string>
+    <string name="select_all">Select all filtered</string>
+    <string name="deselect_all">Clear selection</string>
+    <string name="invert_selection">Invert selection</string>
+    <string name="apps_selected">%1$d selected</string>
+    <string name="no_apps_found">No matching apps found</string>
+    <string name="loading_apps">Loading installed applications…</string>
+
+    <!-- Badges -->
+    <string name="badge_system">SYSTEM</string>
+    <string name="badge_admin">ADMIN</string>
+    <string name="badge_protected">PROTECTED</string>
+    <string name="badge_running">RUNNING</string>
+    <string name="badge_frozen">FROZEN</string>
+
+    <!-- Actions -->
+    <string name="action_force_stop">Force stop</string>
+    <string name="action_force_stop_desc">Kill all running processes immediately</string>
+    <string name="action_block_background">Block background run</string>
+    <string name="action_block_background_desc">Set RUN_IN_BACKGROUND appop to IGNORE</string>
+    <string name="action_block_any_background">Block ANY background run</string>
+    <string name="action_block_any_background_desc">Set RUN_ANY_IN_BACKGROUND appop to IGNORE</string>
+    <string name="action_restore_background">Restore background run</string>
+    <string name="action_restore_background_desc">Allow apps to run normal background tasks</string>
+    <string name="action_freeze">Freeze / Disable</string>
+    <string name="action_freeze_desc">Disable application and hide from launcher</string>
+    <string name="action_unfreeze">Unfreeze / Enable</string>
+    <string name="action_unfreeze_desc">Restore frozen application to enabled state</string>
+    <string name="action_battery_exempt">Exempt battery optimization</string>
+    <string name="action_battery_exempt_desc">Add to Doze whitelist (unrestricted battery)</string>
+    <string name="action_battery_restrict">Enforce battery optimization</string>
+    <string name="action_battery_restrict_desc">Remove from Doze whitelist (optimized battery)</string>
+    <string name="action_clear_cache">Clear app cache</string>
+    <string name="action_clear_cache_desc">Trim cached files across selected applications</string>
+    <string name="action_notifications_off">Disable notifications</string>
+    <string name="action_notifications_off_desc">Block notifications from selected applications</string>
+    <string name="action_notifications_on">Enable notifications</string>
+    <string name="action_notifications_on_desc">Allow notifications for selected applications</string>
+    <string name="action_batch_menu">Apply Batch Action</string>
+
+    <!-- Confirmations & Dialogs -->
+    <string name="confirm_action_title">Confirm Action: %1$s</string>
+    <string name="confirm_action_message">You are about to apply %1$s to %2$d selected applications.\n\nDestructive actions can disable system features or hide app icons.</string>
+    <string name="confirm_safe_mode_warning">Safe Mode is currently enabled to protect your system. Destructive actions like Freeze and Clear Cache require disabling Safe Mode in Settings.</string>
+    <string name="confirm_proceed">Proceed</string>
+    <string name="confirm_cancel">Cancel</string>
+
+    <!-- Execution & Results -->
+    <string name="executing_batch">Applying actions…</string>
+    <string name="batch_completed">Batch completed</string>
+    <string name="results_title">Execution Results</string>
+    <string name="results_summary">%1$d succeeded • %2$d failed • %3$d skipped</string>
+    <string name="results_status_success">Success</string>
+    <string name="results_status_failure">Failed</string>
+    <string name="results_status_skipped">Skipped</string>
+    <string name="results_retry_failed">Retry failed apps</string>
+    <string name="results_done">Done</string>
+    <string name="filter_results_all">All (%1$d)</string>
+    <string name="filter_results_success">Success (%1$d)</string>
+    <string name="filter_results_failed">Failed (%1$d)</string>
+    <string name="filter_results_skipped">Skipped (%1$d)</string>
+    <string name="reason_protected">App is on the protected list and cannot be modified.</string>
+    <string name="reason_device_admin">App is an active Device Administrator and cannot be frozen or stopped.</string>
+    <string name="reason_safe_mode">Action blocked by Safe Mode. Turn off Safe Mode in Settings to unlock.</string>
+
+    <!-- Shizuku Lifecycle & Setup -->
+    <string name="shizuku_ready">Shizuku Ready</string>
+    <string name="shizuku_not_running">Shizuku Not Running</string>
+    <string name="shizuku_denied">Permission Denied</string>
+    <string name="shizuku_not_installed">Shizuku Not Installed</string>
+    <string name="shizuku_title">Shizuku Privileged Bridge</string>
+    <string name="shizuku_status_label">Current Status</string>
+    <string name="shizuku_version_label">Shizuku Version: %1$d</string>
+    <string name="shizuku_uid_label">Service UID: %1$d (%2$s)</string>
+    <string name="btn_request_permission">Request Shizuku Permission</string>
+    <string name="btn_open_shizuku">Open Shizuku App</string>
+    <string name="btn_refresh_status">Refresh Status</string>
+
+    <string name="guide_title">Wireless Debugging Setup Guide</string>
+    <string name="guide_step_1_title">1. Enable Developer Options</string>
+    <string name="guide_step_1_desc">Go to Android Settings &gt; About Phone. Tap \'Build Number\' 7 times until Developer Options are unlocked.</string>
+    <string name="guide_step_2_title">2. Enable Wireless Debugging</string>
+    <string name="guide_step_2_desc">Open Settings &gt; System &gt; Developer Options. Turn on \'Wireless debugging\' and connect to a Wi-Fi network.</string>
+    <string name="guide_step_3_title">3. Pair Device in Shizuku</string>
+    <string name="guide_step_3_desc">Open the Shizuku app, tap \'Pairing\', then switch to Developer Options &gt; \'Pair device with pairing code\'. Enter the 6-digit code in the Shizuku notification.</string>
+    <string name="guide_step_4_title">4. Start Shizuku Service</string>
+    <string name="guide_step_4_desc">Return to Shizuku and tap \'Start\'. Shizuku will start running in ADB shell mode (UID 2000).</string>
+
+    <string name="quirks_title">OEM Specific Quirks &amp; Troubleshooting</string>
+    <string name="quirk_xiaomi_title">Xiaomi / HyperOS / MIUI</string>
+    <string name="quirk_xiaomi_desc">You must enable \'USB debugging (Security settings)\' under Developer Options. This requires inserting a SIM card and logging into a Mi account once.</string>
+    <string name="quirk_oppo_title">OPPO / Realme / OnePlus (ColorOS)</string>
+    <string name="quirk_oppo_desc">Disable \'Permission monitoring\' or \'Disable permission monitoring\' switch in Developer Options to prevent ColorOS from revoking ADB permissions.</string>
+    <string name="quirk_reboot_title">Device Reboot Notice</string>
+    <string name="quirk_reboot_desc">Android system kills Shizuku processes when your device restarts. Simply open Shizuku and tap Start via Wireless Debugging again (no PC needed!).</string>
+
+    <!-- Profiles -->
+    <string name="profiles_title">Action Profiles</string>
+    <string name="profiles_empty">No profiles created yet. Create a profile to execute multiple actions on chosen apps in one tap.</string>
+    <string name="create_profile">Create Profile</string>
+    <string name="profile_name_hint">Profile name (e.g. Night freeze: social)</string>
+    <string name="profile_desc_hint">Description (optional)</string>
+    <string name="profile_select_apps">Select Apps (%1$d selected)</string>
+    <string name="profile_select_actions">Select Actions (%1$d selected)</string>
+    <string name="profile_run">Run Now</string>
+    <string name="profile_delete">Delete Profile</string>
+    <string name="profile_delete_confirm">Delete profile \'%1$s\'?</string>
+    <string name="profile_created">Profile created successfully</string>
+    <string name="profile_executed">Profile \'%1$s\' executed</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_group_safety">Safety &amp; Protection</string>
+    <string name="setting_safe_mode">Safe Mode</string>
+    <string name="setting_safe_mode_desc">Restricts destructive actions (Freeze, Clear Cache) and protects critical apps</string>
+    <string name="dialog_disable_safemode_title">Disable Safe Mode?</string>
+    <string name="dialog_disable_safemode_message">Disabling Safe Mode allows freezing and disabling packages. Freezing core system packages could cause device instability or boot issues. Proceed with caution.</string>
+    <string name="setting_show_system">Show System Apps</string>
+    <string name="setting_show_system_desc">Include Android framework and OEM pre-installed packages in the list</string>
+    <string name="settings_group_display">Appearance</string>
+    <string name="setting_theme">Theme</string>
+    <string name="theme_system">System Default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="settings_group_about">About BatchKit</string>
+    <string name="about_version">Version 1.0.0</string>
+    <string name="about_desc">Privileged batch management for Android apps via Shizuku ADB. Free, open source, 100% offline with zero analytics or tracking.</string>
+    <string name="about_shizuku_link">Powered by Rikka\'s Shizuku Framework</string>
+</resources>

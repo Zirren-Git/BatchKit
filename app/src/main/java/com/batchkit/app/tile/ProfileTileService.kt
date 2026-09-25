@@ -3,6 +3,8 @@ package com.batchkit.app.tile
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.batchkit.app.BatchKitApp
@@ -14,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -40,7 +43,7 @@ class ProfileTileService : TileService() {
             val profile = pinnedId?.let { container.profileRepository.find(it) }
             val ready = container.shizukuStatusProvider.status.value.ready
             if (profile == null || !ready) {
-                openApp()
+                openAppFromAnyThread()
                 return@launch
             }
             val apps = container.appRepository.loadApps().associateBy { it.packageName }
@@ -48,7 +51,7 @@ class ProfileTileService : TileService() {
                 apps[packageName]?.let { PrivilegedTarget.of(it) }
             }
             if (targets.isEmpty()) {
-                openApp()
+                openAppFromAnyThread()
                 return@launch
             }
             container.runCoordinator.applySequentially(profile.actions, targets)
@@ -76,6 +79,11 @@ class ProfileTileService : TileService() {
         tile.label = getString(R.string.tile_label)
         tile.icon = Icon.createWithResource(this, R.drawable.ic_tile)
         tile.updateTile()
+    }
+
+    /** The tile click runs on a background dispatcher, so the activity launch is posted to the main thread. */
+    private fun openAppFromAnyThread() {
+        Handler(Looper.getMainLooper()).post { openApp() }
     }
 
     @Suppress("DEPRECATION")

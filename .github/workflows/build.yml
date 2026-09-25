@@ -179,3 +179,53 @@ jobs:
               --notes-file docs/RELEASE_NOTES.md \
               dist/*.apk
           fi
+
+  # A CI build proves the APK compiles; this job proves it opens. It boots a real
+  # system image, installs both APKs, launches them and reports the outcome (and
+  # any crash trace) as annotations.
+  emulator-smoke:
+    name: Launch on a device image
+    needs: build
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Download APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: batchkit-apks
+          path: dist
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Launch on Android 17
+        id: newest
+        continue-on-error: true
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 37
+          target: default
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash scripts/emulator_launch_check.sh dist
+
+      - name: Launch on Android 16
+        if: steps.newest.outcome == 'failure'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: default
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash scripts/emulator_launch_check.sh dist

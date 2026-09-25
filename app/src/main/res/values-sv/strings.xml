@@ -228,6 +228,11 @@
     <string name="msg_schedule_note">Schemalagda profiler sparas lokalt och körs bara medan Shizuku lever.</string>
     <string name="msg_nothing_selected_for_filters">Inga appar matchar filtren</string>
 
+    <!-- Start-up failure screen -->
+    <string name="startup_failed_title">BatchKit kunde inte starta</string>
+    <string name="startup_failed_body">En komponent som appen behöver vid start kunde inte skapas. Detaljerna nedan kan kopieras och skickas till den som underhåller bygget.</string>
+    <string name="startup_failed_copy">Kopiera detaljer</string>
+
     <string name="duration_ms">%1$d ms</string>
     <string name="duration_seconds">%1$s s</string>
 </resources>

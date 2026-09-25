@@ -37,7 +37,7 @@ class ProfileTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        val container = (application as? BatchKitApp)?.container ?: return
+        val container = (application as? BatchKitApp)?.containerOrNull ?: return
         scope.launch {
             val pinnedId = container.settingsRepository.settings.first().favouriteProfileId
             val profile = pinnedId?.let { container.profileRepository.find(it) }
@@ -65,7 +65,7 @@ class ProfileTileService : TileService() {
     }
 
     private fun updateTile() {
-        val container = (application as? BatchKitApp)?.container
+        val container = (application as? BatchKitApp)?.containerOrNull
         val tile = qsTile ?: return
         val ready = container?.shizukuStatusProvider?.status?.value?.ready == true
         tile.state = if (ready) Tile.STATE_INACTIVE else Tile.STATE_UNAVAILABLE

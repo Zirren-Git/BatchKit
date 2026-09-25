@@ -3,17 +3,41 @@ package com.batchkit.app
 import android.app.Application
 import android.util.Log
 import com.batchkit.app.di.AppContainer
-import com.batchkit.app.privileged.HiddenApiBootstrap
 
 class BatchKitApp : Application() {
 
-    val container: AppContainer by lazy { AppContainer(this) }
+    /**
+     * The dependency graph is built at most once, and a failure while building it
+     * is captured instead of thrown: the activity shows what went wrong rather
+     * than the process dying before the first frame.
+     */
+    private val containerResult: Result<AppContainer> by lazy { runCatching { AppContainer(this) } }
+
+    /** The container, or null when a start-up component could not be created. */
+    val containerOrNull: AppContainer? get() = containerResult.getOrNull()
+
+    /** Why [containerOrNull] is null, if it is. */
+    val containerError: Throwable? get() = containerResult.exceptionOrNull()
+
+    /** The container for call sites that cannot continue without one. */
+    val container: AppContainer
+        get() = containerResult.getOrElse { error ->
+            throw IllegalStateException("BatchKit could not start", error)
+        }
 
     override fun onCreate() {
         super.onCreate()
-        enableShizukuMultiProcessSupport()
-        HiddenApiBootstrap.install()
-        container.shizukuStatusProvider.start()
+        runCatching { enableShizukuMultiProcessSupport() }
+            .onFailure { Log.w(TAG, "Shizuku multi-process support is not available", it) }
+
+        // Start-up must never take the app down. Note that the hidden API exemptions
+        // are deliberately NOT installed here: nothing in the UI process calls a
+        // hidden API (every privileged call goes through the :privileged process,
+        // which installs the exemptions itself). Reflecting into platform internals
+        // from the main process buys nothing and is the kind of call that a newer
+        // platform release can reject outright.
+        runCatching { containerOrNull?.shizukuStatusProvider?.start() }
+            .onFailure { Log.w(TAG, "The Shizuku status provider could not start", it) }
     }
 
     /**
@@ -24,13 +48,9 @@ class BatchKitApp : Application() {
      * still works, it just runs the calls in this process.
      */
     private fun enableShizukuMultiProcessSupport() {
-        try {
-            Class.forName("rikka.shizuku.ShizukuProvider")
-                .getMethod("enableMultiProcessSupport", Boolean::class.javaPrimitiveType)
-                .invoke(null, true)
-        } catch (t: Throwable) {
-            Log.w(TAG, "Shizuku multi-process support is not available", t)
-        }
+        Class.forName("rikka.shizuku.ShizukuProvider")
+            .getMethod("enableMultiProcessSupport", Boolean::class.javaPrimitiveType)
+            .invoke(null, true)
     }
 
     private companion object {

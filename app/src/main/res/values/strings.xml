@@ -244,6 +244,11 @@
     <string name="msg_schedule_note">Scheduled profiles are stored locally and run only while Shizuku is alive.</string>
     <string name="msg_nothing_selected_for_filters">No apps match the current filters</string>
 
+    <!-- Start-up failure screen -->
+    <string name="startup_failed_title">BatchKit could not start</string>
+    <string name="startup_failed_body">A component the app needs at start-up failed. The details below can be copied and sent to whoever maintains this build.</string>
+    <string name="startup_failed_copy">Copy details</string>
+
     <!-- Time units -->
     <string name="duration_ms">%1$d ms</string>
     <string name="duration_seconds">%1$s s</string>

@@ -21,7 +21,7 @@ class ProfileScheduleWorker(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        val container = (applicationContext as? BatchKitApp)?.container ?: return Result.failure()
+        val container = (applicationContext as? BatchKitApp)?.containerOrNull ?: return Result.failure()
         val profileId = inputData.getLong(KEY_PROFILE_ID, -1L)
         if (profileId <= 0L) return Result.failure()
 

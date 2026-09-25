@@ -12,6 +12,26 @@ codec (malformed package names never reach a shell command), the action registry
 (stable ids) and the batch dispatcher (ordering, per-app failures, progress,
 stop-the-batch behaviour).
 
+## Launch check on a real system image (CI)
+
+The `Launch on a device image` job in `.github/workflows/build.yml` boots an Android
+system image, installs both APKs, opens them from a cold start and fails if either
+process is gone ten seconds later. It reads the platform crash buffer and
+`dumpsys activity exit-info`, and reports what it finds as check annotations, so a
+crash trace is readable without downloading anything.
+
+This job exists because a build-only pipeline cannot prove the app opens. The first
+release shipped a Shizuku provider declared with `android:multiprocess="true"`: it
+compiled, packaged, passed the unit tests and the APK inspection, and then crashed
+on every device before `Application.onCreate()` ran, because Shizuku rejects that
+attribute while the provider is installed. Nothing short of launching the APK on a
+device catches that class of bug, so a release is now published only after this job
+passes.
+
+The job runs `scripts/emulator_launch_check.sh`, which expects a directory holding
+`app-release.apk` and `app-debug.apk` (the layout of the `batchkit-apks` artifact).
+It can be pointed at a locally connected device as well.
+
 ## Instrumented Shizuku smoke test
 
 `app/src/androidTest/java/com/batchkit/app/ShizukuSmokeTest.kt` talks to a real

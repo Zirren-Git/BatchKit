@@ -2,6 +2,26 @@
 
 Batch multiple privileged actions on many apps at once, through Shizuku, without root.
 
+## Fixed in this release
+
+* **BatchKit could not start at all.** The Shizuku provider was declared with
+  `android:multiprocess="true"`. Shizuku rejects that while the provider is being
+  installed — the process died before `Application.onCreate()` ever ran, so the app
+  closed immediately, on every Android version, with
+  `java.lang.IllegalStateException: android:multiprocess must be false`. The provider
+  now runs in the main process only, exactly as Shizuku requires, and every other
+  process opts into multi-process binder sharing the documented way.
+* **The Shizuku provider is now protected** with
+  `android.permission.INTERACT_ACROSS_USERS_FULL`, so only Shizuku (which runs as
+  shell and holds that permission) can talk to it.
+* **A start-up failure is no longer invisible.** If a component the app needs at
+  start-up cannot be built, BatchKit opens and shows the reason, with a button to
+  copy it, instead of dying silently.
+* **CI now proves the app opens.** A new job boots a real system image, installs
+  both APKs, launches them and reports the outcome — including any crash trace —
+  before a release is published. The build that shipped this fix is the first one
+  that has ever been launched on a device by CI.
+
 ## Highlights
 
 * **App list** with search, sort (name / last used / install date) and filters
@@ -50,5 +70,9 @@ not for the Play Store.
 * `./gradlew assembleDebug` — builds the debug APK.
 * `./gradlew testDebugUnitTest` — unit tests for the dispatcher, the safety policy,
   the selection codec and the action registry.
+* `scripts/verify_apks.sh dist/*.apk` — checks the built APKs (contents, manifest,
+  provider declaration, permissions, signature).
+* The `Launch on a device image` CI job installs and launches both APKs on a real
+  system image and fails on a crash; see `docs/TESTING.md`.
 * `./gradlew connectedDebugAndroidTest` — instrumented Shizuku smoke test on a
   device (see `docs/TESTING.md` for the wireless debugging run book).

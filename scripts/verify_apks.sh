@@ -75,6 +75,20 @@ for apk in "${apks[@]}"; do
     apk_notes+=("$(grep -m1 '^package:' <<< "$badging")")
     apk_notes+=("targetSdk $(grep -oE "targetSdkVersion:'[0-9]+'" <<< "$badging" | head -n 1)")
     apk_notes+=("$(grep -m1 'launchable-activity' <<< "$badging" | cut -c1-70)")
+    # The Shizuku provider has to run in the main process only: with
+    # android:multiprocess="true" Shizuku throws from onCreate while the provider is
+    # installed, which kills the process before any app code runs. That shipped once;
+    # this check makes a build-time regression impossible to publish.
+    xmltree="$("$AAPT2" dump xmltree --file AndroidManifest.xml "$apk" 2>&1)"
+    if ! grep -q "rikka.shizuku.ShizukuProvider" <<< "$xmltree"; then
+      fail "$apk: the Shizuku provider is missing from the manifest"
+    fi
+    if grep -qE 'multiprocess[^:]*: [^ ]*0x1' <<< "$xmltree"; then
+      fail "$apk: ShizukuProvider is declared with android:multiprocess=\"true\", which crashes the app during start-up"
+    fi
+    if ! grep -q "INTERACT_ACROSS_USERS_FULL" <<< "$xmltree"; then
+      fail "$apk: the Shizuku provider is not protected by android.permission.INTERACT_ACROSS_USERS_FULL"
+    fi
     apk_notes+=("manifest, permissions and launch activity ok")
   fi
 

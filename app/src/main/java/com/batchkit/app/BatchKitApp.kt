@@ -1,6 +1,7 @@
 package com.batchkit.app
 
 import android.app.Application
+import android.os.Build
 import android.util.Log
 import com.batchkit.app.di.AppContainer
 
@@ -27,31 +28,44 @@ class BatchKitApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // Shizuku hands its binder to the process that hosts ShizukuProvider, which
+        // is the main process. Every other process that wants the binder has to ask
+        // for multi-process support, so this runs in every process.
         runCatching { enableShizukuMultiProcessSupport() }
             .onFailure { Log.w(TAG, "Shizuku multi-process support is not available", it) }
 
-        // Start-up must never take the app down. Note that the hidden API exemptions
-        // are deliberately NOT installed here: nothing in the UI process calls a
-        // hidden API (every privileged call goes through the :privileged process,
-        // which installs the exemptions itself). Reflecting into platform internals
-        // from the main process buys nothing and is the kind of call that a newer
-        // platform release can reject outright.
-        runCatching { containerOrNull?.shizukuStatusProvider?.start() }
-            .onFailure { Log.w(TAG, "The Shizuku status provider could not start", it) }
+        // Hidden API exemptions are deliberately NOT installed here: nothing in the
+        // UI process calls a hidden API (every privileged call goes through the
+        // :privileged process, which installs its own exemptions).
+        if (isMainProcess()) {
+            runCatching { containerOrNull?.shizukuStatusProvider?.start() }
+                .onFailure { Log.w(TAG, "The Shizuku status provider could not start", it) }
+            containerError?.let { error ->
+                Log.e(TAG, "BatchKit could not build its start-up components", error)
+            }
+        }
     }
 
     /**
-     * BatchKit executes privileged calls in a dedicated `:privileged` process.
-     * Shizuku only hands the binder to the process that hosts its provider, so
-     * multi process support has to be requested explicitly. The call is reflective
-     * because older Shizuku API releases do not expose it: without it the app
-     * still works, it just runs the calls in this process.
+     * Opts this process into Shizuku's multi-process binder sharing. Reflective
+     * because older Shizuku API releases do not expose the call: without it the app
+     * still works, the binder is just limited to the process that hosts the provider.
      */
     private fun enableShizukuMultiProcessSupport() {
-        Class.forName("rikka.shizuku.ShizukuProvider")
-            .getMethod("enableMultiProcessSupport", Boolean::class.javaPrimitiveType)
-            .invoke(null, true)
+        val provider = Class.forName("rikka.shizuku.ShizukuProvider")
+        val withArgument = runCatching {
+            provider.getMethod("enableMultiProcessSupport", Boolean::class.javaPrimitiveType)
+                .invoke(null, true)
+        }
+        if (withArgument.isSuccess) return
+        // Older releases expose it without the boolean.
+        provider.getMethod("enableMultiProcessSupport").invoke(null)
     }
+
+    /** The UI, the tile and the workers live here; the `:privileged` process does not need any of them. */
+    private fun isMainProcess(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.P ||
+            packageName == Application.getProcessName()
 
     private companion object {
         const val TAG = "BatchKit/App"

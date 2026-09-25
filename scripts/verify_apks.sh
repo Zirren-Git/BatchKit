@@ -49,11 +49,8 @@ for apk in "${apks[@]}"; do
       fail "$apk does not contain $entry"
     fi
   done
-  if grep -qE " META-INF/.*\.(RSA|DSA|EC)\$" <<< "$listing"; then
-    note "  ok: signature block present"
-  else
-    fail "$apk has no META-INF signature block"
-  fi
+  # Signing: minSdk 26 apps are signed with APK Signature Scheme v2/v3 only, so a
+  # META-INF/*.RSA entry is not expected. The real check is in apksigner below.
 
   # 2. The manifest parses and describes the app we think we built.
   if [ -x "$AAPT2" ]; then
@@ -65,8 +62,10 @@ for apk in "${apks[@]}"; do
       fail "$apk: unexpected package name"
     grep -q "launchable-activity" <<< "$badging" ||
       fail "$apk: no launchable activity"
-    grep -q "^sdkVersion:'26'" <<< "$badging" ||
+    if ! grep -qE "^(min)?sdkVersion:'26'" <<< "$badging"; then
+      while IFS= read -r line; do note "  $line"; done < <(grep -iE "sdkversion" <<< "$badging")
       fail "$apk: minSdkVersion is not 26"
+    fi
     for perm in \
       android.permission.QUERY_ALL_PACKAGES \
       android.permission.PACKAGE_USAGE_STATS \
@@ -82,8 +81,13 @@ for apk in "${apks[@]}"; do
   if [ -x "$APKSIGNER" ]; then
     if "$APKSIGNER" verify --min-sdk-version 26 "$apk" > /tmp/apksigner.txt 2>&1; then
       note "  ok: apksigner verify passed"
+      if grep -qE "Verified using v[23] scheme .*: true" /tmp/apksigner.txt; then
+        note "  ok: verified with APK Signature Scheme v2/v3"
+      else
+        fail "$apk: no APK Signature Scheme v2/v3 signature"
+      fi
       while IFS= read -r line; do note "  $line"; done < <(
-        grep -E "^Signer #1 certificate (DN|SHA-256)" /tmp/apksigner.txt
+        grep -E "^(Signer #1 certificate (DN|SHA-256)|Verified using)" /tmp/apksigner.txt
       )
     else
       fail "$apk: apksigner verify failed: $(tail -n 2 /tmp/apksigner.txt | tr '\n' ' ')"

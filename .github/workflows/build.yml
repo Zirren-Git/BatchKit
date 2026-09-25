@@ -96,6 +96,28 @@ jobs:
             app/build/test-results/**
           if-no-files-found: ignore
 
+      # Failing unit tests are surfaced as check annotations too, so the reason is
+      # visible without downloading the test report.
+      - name: Surface unit test failures
+        if: always()
+        continue-on-error: true
+        run: |
+          python3 - <<'PYEOF' || true
+          import glob
+          import xml.etree.ElementTree as ET
+
+          for path in sorted(glob.glob("app/build/test-results/**/*.xml", recursive=True)):
+              try:
+                  root = ET.parse(path).getroot()
+              except Exception:
+                  continue
+              for case in root.iter("testcase"):
+                  for failure in list(case.iter("failure")) + list(case.iter("error")):
+                      head = (failure.get("message") or failure.text or "").strip().splitlines()
+                      detail = head[0][:300] if head else "no message"
+                      print(f"::error::{case.get('classname')}.{case.get('name')}: {detail}")
+          PYEOF
+
       # Compile errors are surfaced as check annotations so they can be read
       # through the GitHub API without downloading any artifact.
       - name: Surface Gradle errors

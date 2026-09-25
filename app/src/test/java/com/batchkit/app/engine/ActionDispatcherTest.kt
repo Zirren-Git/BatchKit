@@ -1,6 +1,7 @@
 package com.batchkit.app.engine
 
 import com.batchkit.app.core.model.AppActionResult
+import com.batchkit.app.core.model.BatchRunSummary
 import com.batchkit.app.core.model.BatchAction
 import com.batchkit.app.core.model.ExecutionOutcome
 import com.batchkit.app.core.model.FailureReason
@@ -14,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.coroutines.coroutineContext
 import org.junit.Test
 
 class ActionDispatcherTest {
@@ -146,17 +149,19 @@ class ActionDispatcherTest {
         val executor = FakeExecutor()
         val dispatcher = ActionDispatcher(executor, SafetyPolicy(), FakeClock()::now)
         val targets = (1..5).map { target("com.example.app$it") }
-        var summary: com.batchkit.app.core.model.BatchRunSummary? = null
-        var job: Job? = null
+        val summary = AtomicReference<BatchRunSummary?>()
 
-        job = launch(Dispatchers.Default) {
-            summary = dispatcher.dispatch(BatchAction.FORCE_STOP, targets) { _, done, _ ->
-                if (done == 2) job?.cancel()
-            }
+        val job = launch(Dispatchers.Default) {
+            val self = coroutineContext[Job]
+            summary.set(
+                dispatcher.dispatch(BatchAction.FORCE_STOP, targets) { _, done, _ ->
+                    if (done == 2) self?.cancel()
+                },
+            )
         }
         job.join()
 
-        val results = requireNotNull(summary).results
+        val results = requireNotNull(summary.get()).results
         assertThat(results.map { it.packageName })
             .containsExactly(
                 "com.example.app1",

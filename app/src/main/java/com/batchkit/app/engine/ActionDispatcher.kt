@@ -91,14 +91,20 @@ class ActionDispatcher(
             }
         }
 
-    /** Marks every app from [fromIndex] on as skipped because the run was stopped. */
+    /**
+     * Marks every app that has no result yet as skipped because the run was stopped.
+     *
+     * The call is idempotent: the loop and the cancellation handler can both reach
+     * it for the same run.
+     */
     private fun markSkipped(
         action: BatchAction,
         targets: List<PrivilegedTarget>,
         fromIndex: Int,
         results: MutableList<AppActionResult>,
     ) {
-        for (index in fromIndex.coerceAtLeast(0) until targets.size) {
+        val start = maxOf(fromIndex, results.size)
+        for (index in start until targets.size) {
             results += AppActionResult(
                 packageName = targets[index].packageName,
                 label = targets[index].label,

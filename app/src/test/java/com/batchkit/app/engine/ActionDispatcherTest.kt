@@ -57,7 +57,7 @@ class ActionDispatcherTest {
     )
 
     @Test
-    fun `every app is executed exactly once and in order`() = runBlocking {
+    fun `every app is executed exactly once and in order`() = runBlocking<Unit> {
         val executor = FakeExecutor()
         val dispatcher = ActionDispatcher(executor, SafetyPolicy(), FakeClock()::now)
         val targets = listOf(target("com.a.one"), target("com.b.two"), target("com.c.three"))
@@ -76,7 +76,7 @@ class ActionDispatcherTest {
     }
 
     @Test
-    fun `progress is reported after every app`() = runBlocking {
+    fun `progress is reported after every app`() = runBlocking<Unit> {
         val dispatcher = ActionDispatcher(FakeExecutor(), SafetyPolicy(), FakeClock()::now)
         val observed = mutableListOf<Pair<Int, Int>>()
 
@@ -89,7 +89,7 @@ class ActionDispatcherTest {
     }
 
     @Test
-    fun `failures are reported per app with their reason`() = runBlocking {
+    fun `failures are reported per app with their reason`() = runBlocking<Unit> {
         val executor = FakeExecutor(failingPackages = setOf("com.b.two"))
         val dispatcher = ActionDispatcher(executor, SafetyPolicy(), FakeClock()::now)
 
@@ -108,7 +108,7 @@ class ActionDispatcherTest {
     }
 
     @Test
-    fun `protected packages are skipped without calling the executor`() = runBlocking {
+    fun `protected packages are skipped without calling the executor`() = runBlocking<Unit> {
         val executor = FakeExecutor()
         val policy = SafetyPolicy(
             protectedPackages = mapOf(
@@ -132,7 +132,7 @@ class ActionDispatcherTest {
     }
 
     @Test
-    fun `device admin apps are reported with the admin reason`() = runBlocking {
+    fun `device admin apps are reported with the admin reason`() = runBlocking<Unit> {
         val executor = FakeExecutor()
         val policy = SafetyPolicy(deviceAdminPackages = listOf("com.example.mdm"))
         val dispatcher = ActionDispatcher(executor, policy, FakeClock()::now)
@@ -145,7 +145,7 @@ class ActionDispatcherTest {
     }
 
     @Test
-    fun `stopping a batch marks the remaining apps as skipped`() = runBlocking {
+    fun `stopping a batch marks the remaining apps as skipped`() = runBlocking<Unit> {
         val executor = FakeExecutor()
         val dispatcher = ActionDispatcher(executor, SafetyPolicy(), FakeClock()::now)
         val targets = (1..5).map { target("com.example.app$it") }
@@ -184,7 +184,7 @@ class ActionDispatcherTest {
     }
 
     @Test
-    fun `executor exceptions never escape the dispatcher`() = runBlocking {
+    fun `executor exceptions never escape the dispatcher`() = runBlocking<Unit> {
         val executor = object : PrivilegedExecutor {
             override fun isReady(): Boolean = true
             override fun execute(target: PrivilegedTarget, action: BatchAction): ExecutionOutcome =
@@ -200,7 +200,7 @@ class ActionDispatcherTest {
     }
 
     @Test
-    fun `summary aggregates mixed results`() = runBlocking {
+    fun `summary aggregates mixed results`() = runBlocking<Unit> {
         val executor = FakeExecutor(failingPackages = setOf("com.b.two"))
         val policy = SafetyPolicy(deviceAdminPackages = listOf("com.example.mdm"))
         val dispatcher = ActionDispatcher(executor, policy, FakeClock()::now)

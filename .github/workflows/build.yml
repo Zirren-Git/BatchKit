@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -95,6 +95,18 @@ jobs:
             app/build/reports/**
             app/build/test-results/**
           if-no-files-found: ignore
+
+      # Compile errors are surfaced as check annotations so they can be read
+      # through the GitHub API without downloading any artifact.
+      - name: Surface Gradle errors
+        if: always()
+        continue-on-error: true
+        run: |
+          if [ -f build-output.log ]; then
+            grep -E "(^e: |error: |FAILURE: Build failed|What went wrong|Caused by: )" build-output.log               | head -n 40               | while IFS= read -r line; do
+                  echo "::error::${line//\r/}"
+                done
+          fi
 
       # The build log is also mirrored to a branch so that it can be fetched with
       # plain git from anywhere, including restricted environments.

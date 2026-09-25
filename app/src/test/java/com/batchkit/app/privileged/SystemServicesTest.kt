@@ -17,9 +17,11 @@ class SystemServicesTest {
         val services = SystemServices.all()
 
         assertThat(services).hasSize(5)
-        assertThat(services.keys).allMatch { it.endsWith("\$Stub") }
-        assertThat(services.keys).allMatch { it.startsWith("android.") || it.startsWith("com.android.internal.") }
         assertThat(services.values).containsExactly("activity", "package", "appops", "deviceidle", "notification")
+        services.keys.forEach { stub ->
+            assertThat(stub).endsWith("\$Stub")
+            assertThat(stub.startsWith("android.") || stub.startsWith("com.android.internal.")).isTrue()
+        }
     }
 
     @Test

@@ -14,7 +14,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -52,10 +51,7 @@ class ProfileTileService : TileService() {
                 openApp()
                 return@launch
             }
-            profile.actions.forEach { action ->
-                container.runCoordinator.start(action, targets)
-                container.runCoordinator.state.first { it is RunState.Finished }
-            }
+            container.runCoordinator.applySequentially(profile.actions, targets)
             updateTile()
         }
     }

@@ -7,7 +7,6 @@ import androidx.work.workDataOf
 import com.batchkit.app.BatchKitApp
 import com.batchkit.app.core.model.PrivilegedTarget
 import com.batchkit.app.engine.RunState
-import kotlinx.coroutines.flow.first
 
 /**
  * Applies a scheduled profile.
@@ -41,10 +40,7 @@ class ProfileScheduleWorker(
             return Result.success(workDataOf(KEY_RESULT to RESULT_NO_APPS))
         }
 
-        profile.actions.forEach { action ->
-            container.runCoordinator.start(action, targets)
-            container.runCoordinator.state.first { it is RunState.Finished }
-        }
+        container.runCoordinator.applySequentially(profile.actions, targets)
 
         // Chain the next run so a daily schedule keeps firing.
         ScheduleManager.reschedule(applicationContext, profile)

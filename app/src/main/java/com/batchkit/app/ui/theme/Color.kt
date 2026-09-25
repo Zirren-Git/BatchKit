@@ -12,4 +12,3 @@ val Slate10 = Color(0xFF10161C)
 val Slate20 = Color(0xFF1B242E)
 val Slate90 = Color(0xFFE7EEF5)
 val Slate95 = Color(0xFFF4F8FC)
-</EOF

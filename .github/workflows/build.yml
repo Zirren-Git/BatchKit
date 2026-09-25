@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -50,8 +50,8 @@ jobs:
               -keyalg RSA -keysize 2048 -validity 10000
           fi
 
-      # Every Gradle invocation appends to build-output.log so that the log can be
-      # published as an artifact and as the ci-logs branch (see below).
+      # Every Gradle invocation appends to build-output.log so that the full log is
+      # published as an artifact even when a task fails.
       - name: Unit tests
         run: |
           set -o pipefail
@@ -107,23 +107,6 @@ jobs:
                   echo "::error::${line//\r/}"
                 done
           fi
-
-      # The build log is also mirrored to a branch so that it can be fetched with
-      # plain git from anywhere, including restricted environments.
-      - name: Publish build log to ci-logs branch
-        if: always()
-        continue-on-error: true
-        run: |
-          git config user.email "ci@batchkit.local"
-          git config user.name "BatchKit CI"
-          git checkout --orphan ci-logs
-          git rm -rf --cached . > /dev/null 2>&1 || true
-          mkdir -p ci-logs
-          cp build-output.log ci-logs/last-build.log 2>/dev/null || true
-          printf 'run: %s\nconclusion: see job summary\n' "${GITHUB_RUN_ID}" > ci-logs/last-run.txt
-          git add -f ci-logs
-          git commit -m "ci: build log for run ${GITHUB_RUN_ID}" || true
-          git push --force origin ci-logs
 
   release:
     name: Publish release

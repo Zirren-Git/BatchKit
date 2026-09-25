@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BatchKit</string>
+
+    <!-- Shizuku status chip -->
+    <string name="chip_shizuku_ready">Shizuku ready</string>
+    <string name="chip_shizuku_not_running">Shizuku not running</string>
+    <string name="chip_shizuku_not_installed">Shizuku not installed</string>
+    <string name="chip_shizuku_permission_required">Permission needed</string>
+    <string name="chip_shizuku_checking">Checking Shizuku</string>
+
+    <!-- Screens -->
+    <string name="screen_apps">Apps</string>
+    <string name="screen_profiles">Profiles</string>
+    <string name="screen_settings">Settings</string>
+    <string name="screen_help">Shizuku setup</string>
+    <string name="screen_results">Results</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_settings">Open settings</string>
+    <string name="cd_help">Open Shizuku help</string>
+    <string name="cd_back">Go back</string>
+    <string name="cd_select_all_filtered">Select all filtered apps</string>
+    <string name="cd_clear_selection">Clear selection</string>
+    <string name="cd_refresh">Reload app list</string>
+    <string name="cd_sort">Change sorting</string>
+    <string name="cd_filter">Change filters</string>
+    <string name="cd_search">Search apps</string>
+    <string name="cd_run_action">Run action on selected apps</string>
+    <string name="cd_save_profile">Save selection as profile</string>
+    <string name="cd_app_icon">App icon</string>
+    <string name="cd_expand">Show details</string>
+    <string name="cd_collapse">Hide details</string>
+
+    <!-- App list -->
+    <string name="search_hint">Search name or package</string>
+    <string name="selection_count">%1$d selected</string>
+    <string name="selection_none">Nothing selected</string>
+    <string name="apps_count">%1$d apps</string>
+    <string name="apps_count_filtered">%1$d of %2$d apps</string>
+    <string name="apps_loading">Loading installed apps…</string>
+    <string name="apps_empty_title">No apps match</string>
+    <string name="apps_empty_body">Adjust the search text or the filters to see more apps.</string>
+    <string name="apps_running_unavailable">Running state is only available while Shizuku is connected.</string>
+    <string name="apps_usage_access_body">Grant usage access to sort by last used.</string>
+    <string name="action_grant_usage_access">Grant usage access</string>
+    <string name="apps_frozen_hint">Frozen apps stay hidden from the launcher until you unfreeze them.</string>
+
+    <!-- Filters and sorting -->
+    <string name="filter_title">Filters</string>
+    <string name="filter_user">User apps</string>
+    <string name="filter_system">System apps</string>
+    <string name="filter_running">Running now</string>
+    <string name="filter_frozen">Frozen</string>
+    <string name="filter_reset">Reset filters</string>
+    <string name="filter_apply">Apply</string>
+    <string name="sort_title">Sort by</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_last_used">Last used</string>
+    <string name="sort_install_date">Install date</string>
+    <string name="sort_descending">Descending</string>
+    <string name="sort_ascending">Ascending</string>
+
+    <!-- Badges -->
+    <string name="badge_system">System</string>
+    <string name="badge_frozen">Frozen</string>
+    <string name="badge_admin">Device admin</string>
+    <string name="badge_protected">Protected</string>
+    <string name="badge_running">Running</string>
+    <string name="badge_advanced">Advanced</string>
+    <string name="badge_destructive">Destructive</string>
+
+    <!-- Actions -->
+    <string name="group_background">Background activity</string>
+    <string name="group_lifecycle">App state</string>
+    <string name="group_power">Battery</string>
+    <string name="group_storage">Storage</string>
+    <string name="group_notifications">Notifications</string>
+
+    <string name="action_force_stop">Force stop</string>
+    <string name="action_force_stop_desc">Kills the app process immediately. It can start again on its own.</string>
+    <string name="action_block_background">Block background run</string>
+    <string name="action_block_background_desc">Sets the run_in_background app op to ignore, so the app cannot start work on its own.</string>
+    <string name="action_block_any_background">Block ANY background run</string>
+    <string name="action_block_any_background_desc">Sets run_any_in_background to ignore. Stricter: also blocks short background windows.</string>
+    <string name="action_restore_background">Restore background run</string>
+    <string name="action_restore_background_desc">Removes the app op override and puts the app back to the system default.</string>
+    <string name="action_freeze">Freeze (disable)</string>
+    <string name="action_freeze_desc">Disables the app for this user. It disappears from the launcher until unfrozen.</string>
+    <string name="action_unfreeze">Unfreeze (enable)</string>
+    <string name="action_unfreeze_desc">Re-enables a frozen app.</string>
+    <string name="action_battery_exempt">Battery optimization OFF</string>
+    <string name="action_battery_exempt_desc">Adds the app to the device idle whitelist so the system stops dozing it.</string>
+    <string name="action_battery_uneempt">Battery optimization ON</string>
+    <string name="action_battery_uneempt_desc">Removes the app from the device idle whitelist.</string>
+    <string name="action_clear_cache">Clear cache</string>
+    <string name="action_clear_cache_desc">Deletes the app cache directory. App data is not touched.</string>
+    <string name="action_notifications_off">Notifications OFF</string>
+    <string name="action_notifications_off_desc">Blocks notifications for the app.</string>
+    <string name="action_notifications_on">Notifications ON</string>
+    <string name="action_notifications_on_desc">Allows notifications for the app again.</string>
+
+    <!-- Confirmation dialogs -->
+    <string name="confirm_apply">Apply</string>
+    <string name="confirm_cancel">Cancel</string>
+    <string name="confirm_destructive_title">%1$s on %2$d apps?</string>
+    <string name="confirm_destructive_message">This action changes app state in a way you can undo later, but %1$d apps will be affected. Continue?</string>
+    <string name="confirm_protected_title">%1$d protected apps will be skipped</string>
+    <string name="confirm_protected_message">BatchKit never freezes or force-stops itself, Shizuku, launchers, input methods or critical system packages. The remaining %1$d apps will be processed.</string>
+    <string name="confirm_locked_title">Advanced actions are locked</string>
+    <string name="confirm_locked_message">Safe mode allows force stop and background app op changes only. Unlock advanced actions to use freeze, cache clearing and notification changes?</string>
+    <string name="confirm_unlock">Unlock advanced actions</string>
+
+    <!-- Results -->
+    <string name="results_title">Results</string>
+    <string name="results_summary">%1$d succeeded · %2$d failed · %3$d skipped</string>
+    <string name="results_duration">Finished in %1$s</string>
+    <string name="results_empty">No results yet. Pick apps and run an action.</string>
+    <string name="results_retry_failed">Retry failed apps</string>
+    <string name="results_nothing_to_retry">Every app succeeded.</string>
+    <string name="results_status_success">Succeeded</string>
+    <string name="results_status_failed">Failed</string>
+    <string name="results_status_skipped">Skipped</string>
+    <string name="results_details">Technical detail</string>
+
+    <!-- Reasons -->
+    <string name="reason_success">Done</string>
+    <string name="reason_protected">Protected app: BatchKit never runs this action on it</string>
+    <string name="reason_device_admin">App is a device administrator</string>
+    <string name="reason_shizuku_unavailable">Shizuku is not connected</string>
+    <string name="reason_permission_denied">Shizuku permission was denied</string>
+    <string name="reason_not_supported">Not supported on this device</string>
+    <string name="reason_remote_error">System call failed</string>
+    <string name="reason_method_missing">System API not available in this Android version</string>
+    <string name="reason_shell_failed">Shell fallback failed</string>
+    <string name="reason_cancelled">Cancelled</string>
+    <string name="reason_unknown">Unknown error</string>
+
+    <!-- Shizuku screen -->
+    <string name="shizuku_title">Shizuku status</string>
+    <string name="shizuku_phase_checking">Checking Shizuku…</string>
+    <string name="shizuku_phase_not_installed">Shizuku is not installed</string>
+    <string name="shizuku_phase_not_running">Shizuku is installed but not running</string>
+    <string name="shizuku_phase_permission">BatchKit needs Shizuku permission</string>
+    <string name="shizuku_phase_ready">Shizuku is ready</string>
+    <string name="shizuku_phase_ready_body">Privileged actions run through the Shizuku service in a separate BatchKit process.</string>
+    <string name="shizuku_phase_not_installed_body">Install Shizuku from the app store or GitHub, then start it over wireless debugging.</string>
+    <string name="shizuku_phase_not_running_body">Shizuku stops when the device reboots. Start Shizuku again to reconnect.</string>
+    <string name="shizuku_phase_permission_body">Shizuku is running. Grant BatchKit permission so privileged calls can be made.</string>
+    <string name="shizuku_action_install">Open Shizuku on the store</string>
+    <string name="shizuku_action_start">Start Shizuku</string>
+    <string name="shizuku_action_grant">Grant permission</string>
+    <string name="shizuku_action_retry">Check again</string>
+    <string name="shizuku_action_open">Open Shizuku</string>
+    <string name="shizuku_info_version">Shizuku version %1$d · uid %2$d</string>
+    <string name="shizuku_uid_unknown">Shizuku version unavailable</string>
+    <string name="shizuku_note_reboot">Shizuku sessions end at every reboot. If actions stop working, start Shizuku again.</string>
+    <string name="shizuku_steps_title">Set up Shizuku (wireless debugging)</string>
+    <string name="shizuku_step_1">1. Enable Developer options: Settings → About phone → tap Build number 7 times.</string>
+    <string name="shizuku_step_2">2. In Developer options, enable Wireless debugging and keep the phone on the same Wi-Fi as your computer.</string>
+    <string name="shizuku_step_3">3. Open Shizuku and choose the wireless debugging pairing option. Android shows a pairing code and port.</string>
+    <string name="shizuku_step_4">4. Shizuku asks you to pair over ADB. Accept the prompts, then return to BatchKit.</string>
+    <string name="shizuku_step_5">5. Tap Check again here. The status chip turns green when the connection works.</string>
+    <string name="shizuku_troubleshooting_title">OEM quirks</string>
+    <string name="shizuku_trouble_miui">Xiaomi / HyperOS: enable Developer options → USB debugging (Security settings) and turn off MIUI optimization if Shizuku keeps dying.</string>
+    <string name="shizuku_trouble_realme">Realme / OPPO / ColorOS: turn off Developer options → Disable permission monitoring, otherwise Shizuku loses permission after a while.</string>
+    <string name="shizuku_trouble_generic">Other OEMs: some ROMs kill background services aggressively. Disable battery restrictions for Shizuku itself.</string>
+    <string name="shizuku_trouble_usb">Prefer USB: enable USB debugging, connect to a computer with ADB, then run the command Shizuku shows in its app.</string>
+    <string name="shizuku_help_note">BatchKit talks to Shizuku only. It has no internet permission and never sends data anywhere.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Two steps before batch actions</string>
+    <string name="onboarding_body">BatchKit applies privileged settings through Shizuku. Install Shizuku, start it over wireless debugging, then grant BatchKit permission. Safe mode is on by default.</string>
+    <string name="onboarding_start">Set up Shizuku</string>
+    <string name="onboarding_skip">Explore the app first</string>
+
+    <!-- Profiles -->
+    <string name="profiles_title">Profiles</string>
+    <string name="profiles_empty_title">No profiles yet</string>
+    <string name="profiles_empty_body">Select apps on the Apps tab and save the selection with its action set as a profile.</string>
+    <string name="profile_save_title">Save profile</string>
+    <string name="profile_name_label">Profile name</string>
+    <string name="profile_name_placeholder">Night freeze: social apps</string>
+    <string name="profile_save_confirm">Save</string>
+    <string name="profile_apply">Apply</string>
+    <string name="profile_delete">Delete</string>
+    <string name="profile_delete_title">Delete %1$s?</string>
+    <string name="profile_delete_message">The profile is removed. Installed apps are not changed.</string>
+    <string name="profile_apps_count">%1$d apps</string>
+    <string name="profile_actions_count">%1$d actions</string>
+    <string name="profile_pin">Pin to Quick Settings tile</string>
+    <string name="profile_unpin">Unpin from tile</string>
+    <string name="profile_pinned">Pinned</string>
+    <string name="profile_saved_message">Profile saved</string>
+    <string name="profile_not_found">Profile no longer exists</string>
+    <string name="profile_missing_apps">%1$d apps from this profile are no longer installed</string>
+    <string name="profile_schedule">Daily schedule</string>
+    <string name="profile_schedule_time">Run at %1$s</string>
+    <string name="profile_schedule_disclaimer">Scheduled runs need Shizuku to be running. If the Shizuku session is dead, the run is skipped and a result is recorded.</string>
+    <string name="profile_empty_selection">Select at least one app before saving a profile.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">Follow system</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_safety_title">Safety</string>
+    <string name="settings_safe_mode">Safe mode</string>
+    <string name="settings_safe_mode_desc">Limits actions to force stop and background app op changes. Freeze, cache clearing and notification changes stay locked.</string>
+    <string name="settings_advanced_unlock">Advanced actions unlocked</string>
+    <string name="settings_advanced_unlock_desc">Freeze, cache clearing and notification toggles become available in the action picker.</string>
+    <string name="settings_advanced_locked_hint">Locked by safe mode</string>
+    <string name="settings_default_action">Default action</string>
+    <string name="settings_protected_title">Protected packages</string>
+    <string name="settings_protected_desc">BatchKit refuses destructive actions on these packages: itself, Shizuku, the launcher, input methods, device admins and critical system packages.</string>
+    <string name="settings_protected_count">%1$d packages are protected on this device</string>
+    <string name="settings_shizuku_title">Shizuku</string>
+    <string name="settings_about_title">About</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_offline">Fully offline</string>
+    <string name="settings_offline_desc">No analytics, no trackers, no network permission at all.</string>
+    <string name="settings_disclaimer_title">Disclaimer</string>
+    <string name="settings_disclaimer">BatchKit changes app state through ADB level APIs. Freezing a system package can make the device unstable. You are responsible for what you apply.</string>
+    <string name="settings_default_action_applied">Default action updated</string>
+
+    <!-- Tile -->
+    <string name="tile_label">BatchKit</string>
+    <string name="tile_ready">Apply %1$s</string>
+    <string name="tile_no_profile">Open BatchKit and pin a profile</string>
+    <string name="tile_not_ready">Shizuku is not connected</string>
+
+    <!-- Messages -->
+    <string name="msg_no_selection">Select at least one app first</string>
+    <string name="msg_shizuku_required">Connect Shizuku to run actions</string>
+    <string name="msg_selection_saved">Selection saved</string>
+    <string name="msg_selection_restored">Previous selection restored</string>
+    <string name="msg_usage_access_needed">Usage access permission is required for this sort order</string>
+    <string name="msg_usage_access_unavailable">This device does not expose usage access settings</string>
+    <string name="msg_run_started">Applying %1$s to %2$d apps…</string>
+    <string name="msg_run_finished">%1$d of %2$d apps succeeded</string>
+    <string name="msg_profile_applied">%1$s applied</string>
+    <string name="msg_profile_needs_shizuku">Shizuku is not connected, the profile was not applied</string>
+    <string name="msg_schedule_note">Scheduled profiles are stored locally and run only while Shizuku is alive.</string>
+    <string name="msg_nothing_selected_for_filters">No apps match the current filters</string>
+
+    <!-- Time units -->
+    <string name="duration_ms">%1$d ms</string>
+    <string name="duration_seconds">%1$s s</string>
+</resources>

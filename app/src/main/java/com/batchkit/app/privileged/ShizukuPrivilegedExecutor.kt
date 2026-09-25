@@ -62,7 +62,7 @@ class ShizukuPrivilegedExecutor : PrivilegedExecutor {
     // ---------------------------------------------------------------- actions
 
     private fun forceStop(target: PrivilegedTarget): ExecutionOutcome {
-        val activityManager = remoteInterface("android.app.IActivityManager\$Stub")
+        val activityManager = remoteInterface(SystemServices.ACTIVITY_MANAGER)
         invokeAny(
             activityManager,
             "forceStopPackage",
@@ -93,7 +93,7 @@ class ShizukuPrivilegedExecutor : PrivilegedExecutor {
         fallbackOp: Int,
         mode: Int,
     ): ExecutionOutcome {
-        val service = remoteInterface("com.android.internal.app.IAppOpsService\$Stub")
+        val service = remoteInterface(SystemServices.APP_OPS)
         val op = opNumber(opString, fallbackOp)
         var failure: Throwable? = null
 
@@ -140,7 +140,7 @@ class ShizukuPrivilegedExecutor : PrivilegedExecutor {
     }
 
     private fun setApplicationEnabled(target: PrivilegedTarget, newState: Int): ExecutionOutcome {
-        val packageManager = remoteInterface("android.content.pm.IPackageManager\$Stub")
+        val packageManager = remoteInterface(SystemServices.PACKAGE_MANAGER)
         val method = findMethod(packageManager, "setApplicationEnabledSetting", 5)
             ?: findMethod(packageManager, "setApplicationEnabledSetting", 4)
             ?: throw NoSuchMethodException("setApplicationEnabledSetting")
@@ -156,7 +156,7 @@ class ShizukuPrivilegedExecutor : PrivilegedExecutor {
     private fun setBatteryExempt(target: PrivilegedTarget, exempt: Boolean): ExecutionOutcome {
         val methodName = if (exempt) "addPowerSaveWhitelistApp" else "removePowerSaveWhitelistApp"
         try {
-            val controller = remoteInterface("android.os.IDeviceIdleController\$Stub")
+            val controller = remoteInterface(SystemServices.DEVICE_IDLE)
             invokeRemote(controller, methodName, target.packageName)
             return ExecutionOutcome.ok()
         } catch (t: Throwable) {
@@ -178,7 +178,7 @@ class ShizukuPrivilegedExecutor : PrivilegedExecutor {
     private fun clearCache(target: PrivilegedTarget): ExecutionOutcome {
         // deleteApplicationCacheFiles() is the same call the system Settings app makes.
         try {
-            val packageManager = remoteInterface("android.content.pm.IPackageManager\$Stub")
+            val packageManager = remoteInterface(SystemServices.PACKAGE_MANAGER)
             invokeRemote(packageManager, "deleteApplicationCacheFiles", target.packageName, null)
             return ExecutionOutcome.ok()
         } catch (t: Throwable) {
@@ -200,7 +200,7 @@ class ShizukuPrivilegedExecutor : PrivilegedExecutor {
 
     private fun setNotificationsEnabled(target: PrivilegedTarget, enabled: Boolean): ExecutionOutcome {
         try {
-            val manager = remoteInterface("android.app.INotificationManager\$Stub")
+            val manager = remoteInterface(SystemServices.NOTIFICATION_MANAGER)
             invokeAny(
                 manager,
                 "setNotificationsEnabledForPackage",

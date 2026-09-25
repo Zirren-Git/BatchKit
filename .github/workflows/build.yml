@@ -77,6 +77,11 @@ jobs:
           cp app/build/outputs/apk/release/*.apk dist/ 2>/dev/null || true
           ls -l dist || true
 
+      - name: Verify APKs
+        if: always()
+        continue-on-error: true
+        run: bash scripts/verify_apks.sh dist/*.apk
+
       - name: Upload APKs
         if: always()
         uses: actions/upload-artifact@v4
@@ -157,11 +162,20 @@ jobs:
           done
           ls -l
 
-      - name: Create GitHub release
+      - name: Verify APKs
+        run: bash scripts/verify_apks.sh dist/*.apk
+
+      - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" \
-            --title "BatchKit ${GITHUB_REF_NAME}" \
-            --notes-file docs/RELEASE_NOTES.md \
-            dist/*.apk
+          title="BatchKit ${GITHUB_REF_NAME}"
+          if gh release view "${GITHUB_REF_NAME}" > /dev/null 2>&1; then
+            gh release upload "${GITHUB_REF_NAME}" dist/*.apk --clobber
+            gh release edit "${GITHUB_REF_NAME}" --title "$title" --notes-file docs/RELEASE_NOTES.md
+          else
+            gh release create "${GITHUB_REF_NAME}" \
+              --title "$title" \
+              --notes-file docs/RELEASE_NOTES.md \
+              dist/*.apk
+          fi

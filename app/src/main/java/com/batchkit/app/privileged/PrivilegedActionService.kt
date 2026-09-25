@@ -57,6 +57,7 @@ class PrivilegedActionService : Service() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 PrivilegedProtocol.MSG_EXECUTE -> handleExecute(msg)
+                PrivilegedProtocol.MSG_DIAGNOSE -> handleDiagnose(msg)
                 else -> super.handleMessage(msg)
             }
         }
@@ -93,6 +94,22 @@ class PrivilegedActionService : Service() {
                 }
             }
             reply(replyTo, requestId, outcome)
+        }
+    }
+
+    private fun handleDiagnose(msg: Message) {
+        val replyTo = msg.replyTo ?: return
+        scope.launch {
+            val report = runCatching { PrivilegedDiagnostics.run(this@PrivilegedActionService) }
+                .getOrElse { error -> "diagnostics failed: ${error.javaClass.name}: ${error.message}" }
+            val bundle = Bundle().apply {
+                putInt(PrivilegedProtocol.KEY_REQUEST_ID, msg.data?.getInt(PrivilegedProtocol.KEY_REQUEST_ID) ?: 0)
+                putString(PrivilegedProtocol.KEY_DIAGNOSTICS, report)
+            }
+            val response = Message.obtain(null, PrivilegedProtocol.MSG_DIAGNOSE_RESULT)
+            response.data = bundle
+            runCatching { replyTo.send(response) }
+                .onFailure { Log.w(TAG, "Could not deliver diagnostics", it) }
         }
     }
 

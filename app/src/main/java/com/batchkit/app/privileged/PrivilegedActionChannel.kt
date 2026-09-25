@@ -21,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Client side of the privileged bridge.
@@ -75,11 +77,29 @@ class PrivilegedActionChannel(
         return outcome
     }
 
+    /**
+     * Runs the self-test in both processes. The two reports are compared side by
+     * side on the Shizuku screen: the UI process can look healthy while the
+     * privileged process never received a binder, and that is invisible otherwise.
+     */
+    suspend fun diagnose(): String = withContext(Dispatchers.IO) {
+        open()
+        val remote = session?.diagnose()
+        buildString {
+            appendLine("[app process]")
+            appendLine(PrivilegedDiagnostics.run(context))
+            appendLine()
+            appendLine("[privileged process]")
+            appendLine(remote ?: "unavailable: the privileged process could not be bound")
+        }
+    }
+
     private class RemoteSession(private val context: Context) {
 
         private val requestIds = AtomicInteger(0)
         private val pending = ConcurrentHashMap<Int, ArrayBlockingQueue<ExecutionOutcome>>()
         private val connected = CountDownLatch(1)
+        private val diagnostics = ArrayBlockingQueue<String>(1)
 
         private var connection: ServiceConnection? = null
         private var outbound: Messenger? = null
@@ -87,8 +107,12 @@ class PrivilegedActionChannel(
         @SuppressLint("HandlerLeak")
         private val resultMessenger = Messenger(object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
-                if (msg.what != PrivilegedProtocol.MSG_RESULT) return
                 val data = msg.data ?: return
+                if (msg.what == PrivilegedProtocol.MSG_DIAGNOSE_RESULT) {
+                    diagnostics.offer(data.getString(PrivilegedProtocol.KEY_DIAGNOSTICS).orEmpty())
+                    return
+                }
+                if (msg.what != PrivilegedProtocol.MSG_RESULT) return
                 val requestId = data.getInt(PrivilegedProtocol.KEY_REQUEST_ID)
                 val outcome = ExecutionOutcome(
                     success = data.getBoolean(PrivilegedProtocol.KEY_SUCCESS),
@@ -161,6 +185,24 @@ class PrivilegedActionChannel(
             }
         }
 
+        /** Returns the privileged process report, or null when it does not answer. */
+        fun diagnose(): String? {
+            val messenger = outbound ?: return null
+            diagnostics.clear()
+            return try {
+                val bundle = Bundle().apply {
+                    putInt(PrivilegedProtocol.KEY_REQUEST_ID, requestIds.incrementAndGet())
+                }
+                val message = Message.obtain(null, PrivilegedProtocol.MSG_DIAGNOSE)
+                message.data = bundle
+                message.replyTo = resultMessenger
+                messenger.send(message)
+                diagnostics.poll(DIAGNOSE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            } catch (t: Throwable) {
+                "diagnostics failed: ${t.javaClass.simpleName}: ${t.message}"
+            }
+        }
+
         fun disconnect() {
             connection?.let { runCatching { context.unbindService(it) } }
             connection = null
@@ -179,5 +221,6 @@ class PrivilegedActionChannel(
         const val TAG = "BatchKit/PrivilegedChannel"
         const val CONNECT_TIMEOUT_SECONDS = 3L
         const val RESULT_TIMEOUT_SECONDS = 60L
+        const val DIAGNOSE_TIMEOUT_SECONDS = 20L
     }
 }

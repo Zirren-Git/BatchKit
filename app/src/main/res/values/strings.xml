@@ -244,6 +244,12 @@
     <string name="msg_schedule_note">Scheduled profiles are stored locally and run only while Shizuku is alive.</string>
     <string name="msg_nothing_selected_for_filters">No apps match the current filters</string>
 
+    <string name="shizuku_self_test_title">Self-test</string>
+    <string name="shizuku_self_test_body">Runs a check in the app process and in the privileged process and shows exactly where Shizuku stops working. Copy the report if you are reporting a problem.</string>
+    <string name="shizuku_self_test_run">Run self-test</string>
+    <string name="shizuku_self_test_running">Running…</string>
+    <string name="shizuku_self_test_copy">Copy report</string>
+
     <!-- Start-up failure screen -->
     <string name="startup_failed_title">BatchKit could not start</string>
     <string name="startup_failed_body">A component the app needs at start-up failed. The details below can be copied and sent to whoever maintains this build.</string>

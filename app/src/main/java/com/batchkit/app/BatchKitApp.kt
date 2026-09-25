@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import com.batchkit.app.di.AppContainer
+import rikka.shizuku.ShizukuProvider
 
 class BatchKitApp : Application() {
 
@@ -28,15 +29,12 @@ class BatchKitApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // Shizuku hands its binder to the process that hosts ShizukuProvider, which
-        // is the main process. Every other process that wants the binder has to ask
-        // for multi-process support, so this runs in every process.
-        runCatching { enableShizukuMultiProcessSupport() }
-            .onFailure { Log.w(TAG, "Shizuku multi-process support is not available", it) }
+        runCatching { setupShizukuBinderSharing() }
+            .onFailure { Log.w(TAG, "Shizuku binder sharing is not available", it) }
 
-        // Hidden API exemptions are deliberately NOT installed here: nothing in the
-        // UI process calls a hidden API (every privileged call goes through the
-        // :privileged process, which installs its own exemptions).
+        // Hidden API exemptions are deliberately NOT installed here: the executor
+        // installs them in whatever process it runs in, and it normally runs in
+        // :privileged. The UI process only does that if it has to fall back.
         if (isMainProcess()) {
             runCatching { containerOrNull?.shizukuStatusProvider?.start() }
                 .onFailure { Log.w(TAG, "The Shizuku status provider could not start", it) }
@@ -47,19 +45,22 @@ class BatchKitApp : Application() {
     }
 
     /**
-     * Opts this process into Shizuku's multi-process binder sharing. Reflective
-     * because older Shizuku API releases do not expose the call: without it the app
-     * still works, the binder is just limited to the process that hosts the provider.
+     * Sets up Shizuku's binder sharing between this app's processes.
+     *
+     * Shizuku hands its binder to the process that hosts ShizukuProvider, which is
+     * the main process. The boolean of `enableMultiProcessSupport` does NOT mean
+     * "enable": it is `isProviderProcess`, i.e. which side of that split this process
+     * is on. A non-provider process additionally has to ask the provider for the
+     * binder. Calling it with `true` everywhere - as this app did - told every
+     * process it already held a binder, so the `:privileged` process ran without
+     * one and every single action failed as "Shizuku is not available".
      */
-    private fun enableShizukuMultiProcessSupport() {
-        val provider = Class.forName("rikka.shizuku.ShizukuProvider")
-        val withArgument = runCatching {
-            provider.getMethod("enableMultiProcessSupport", Boolean::class.javaPrimitiveType)
-                .invoke(null, true)
+    private fun setupShizukuBinderSharing() {
+        val providerProcess = isMainProcess()
+        ShizukuProvider.enableMultiProcessSupport(providerProcess)
+        if (!providerProcess) {
+            ShizukuProvider.requestBinderForNonProviderProcess(this)
         }
-        if (withArgument.isSuccess) return
-        // Older releases expose it without the boolean.
-        provider.getMethod("enableMultiProcessSupport").invoke(null)
     }
 
     /** The UI, the tile and the workers live here; the `:privileged` process does not need any of them. */

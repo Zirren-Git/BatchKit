@@ -1,5 +1,7 @@
 package com.batchkit.app.ui.screens.shizuku
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -23,12 +25,17 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.batchkit.app.R
@@ -36,6 +43,7 @@ import com.batchkit.app.core.model.ShizukuPhase
 import com.batchkit.app.core.model.ShizukuStatus
 import com.batchkit.app.di.AppContainer
 import com.batchkit.app.ui.components.SectionHeader
+import kotlinx.coroutines.launch
 
 /**
  * Shizuku setup and troubleshooting.
@@ -51,6 +59,9 @@ fun ShizukuScreen(
 ) {
     val status by container.shizukuStatusProvider.status.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var selfTest by remember { mutableStateOf<String?>(null) }
+    var selfTestRunning by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -85,6 +96,50 @@ fun ShizukuScreen(
                 Step(3, stringResource(R.string.shizuku_step_3))
                 Step(4, stringResource(R.string.shizuku_step_4))
                 Step(5, stringResource(R.string.shizuku_step_5))
+            }
+        }
+
+        SectionHeader(stringResource(R.string.shizuku_self_test_title))
+        Card {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = stringResource(R.string.shizuku_self_test_body),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(12.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = {
+                            selfTestRunning = true
+                            scope.launch {
+                                selfTest = container.privilegedChannel.diagnose()
+                                selfTestRunning = false
+                            }
+                        },
+                        enabled = !selfTestRunning,
+                    ) {
+                        Text(
+                            stringResource(
+                                if (selfTestRunning) R.string.shizuku_self_test_running
+                                else R.string.shizuku_self_test_run,
+                            ),
+                        )
+                    }
+                    selfTest?.let { report ->
+                        OutlinedButton(onClick = { copyToClipboard(context, report) }) {
+                            Text(stringResource(R.string.shizuku_self_test_copy))
+                        }
+                    }
+                }
+                selfTest?.let { report ->
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = report,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontFamily = FontFamily.Monospace,
+                    )
+                }
             }
         }
 
@@ -215,6 +270,11 @@ private fun openShizukuApp(context: Context) {
     } else {
         openUrl(context, "package:" + ShizukuStatus.SHIZUKU_PACKAGE)
     }
+}
+
+private fun copyToClipboard(context: Context, text: String) {
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return
+    clipboard.setPrimaryClip(ClipData.newPlainText("BatchKit Shizuku self-test", text))
 }
 
 /** Opens the system usage access screen; used by the app list hint. */

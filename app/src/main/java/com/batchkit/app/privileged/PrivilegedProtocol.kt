@@ -5,6 +5,8 @@ internal object PrivilegedProtocol {
 
     const val MSG_EXECUTE = 1
     const val MSG_RESULT = 2
+    const val MSG_DIAGNOSE = 3
+    const val MSG_DIAGNOSE_RESULT = 4
 
     const val KEY_REQUEST_ID = "request_id"
     const val KEY_ACTION_ID = "action_id"
@@ -18,4 +20,5 @@ internal object PrivilegedProtocol {
     const val KEY_SUCCESS = "success"
     const val KEY_REASON = "reason"
     const val KEY_DETAIL = "detail"
+    const val KEY_DIAGNOSTICS = "diagnostics"
 }

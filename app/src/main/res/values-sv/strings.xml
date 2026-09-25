@@ -228,6 +228,12 @@
     <string name="msg_schedule_note">Schemalagda profiler sparas lokalt och körs bara medan Shizuku lever.</string>
     <string name="msg_nothing_selected_for_filters">Inga appar matchar filtren</string>
 
+    <string name="shizuku_self_test_title">Självtest</string>
+    <string name="shizuku_self_test_body">Kör en kontroll i appens process och i den privilegierade processen och visar exakt var Shizuku slutar fungera. Kopiera rapporten om du rapporterar ett problem.</string>
+    <string name="shizuku_self_test_run">Kör självtest</string>
+    <string name="shizuku_self_test_running">Kör…</string>
+    <string name="shizuku_self_test_copy">Kopiera rapport</string>
+
     <!-- Start-up failure screen -->
     <string name="startup_failed_title">BatchKit kunde inte starta</string>
     <string name="startup_failed_body">En komponent som appen behöver vid start kunde inte skapas. Detaljerna nedan kan kopieras och skickas till den som underhåller bygget.</string>

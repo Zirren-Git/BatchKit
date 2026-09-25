@@ -12,6 +12,8 @@ import com.batchkit.app.core.model.PrivilegedTarget
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import rikka.shizuku.Shizuku
+import rikka.shizuku.ShizukuBinderWrapper
+import rikka.shizuku.SystemServiceHelper
 
 /**
  * Applies batch actions through the Shizuku binder, which runs with the identity
@@ -224,9 +226,22 @@ class ShizukuPrivilegedExecutor : PrivilegedExecutor {
     }
 
     private fun createInterface(stubClassName: String): Any {
+        HiddenApiBootstrap.install()
+        if (!Shizuku.pingBinder()) {
+            throw IllegalStateException("The Shizuku binder is not available in this process")
+        }
+        val serviceName = SystemServices.nameFor(stubClassName)
+            ?: throw IllegalStateException("No system service is mapped to $stubClassName")
+        val remote: IBinder = SystemServiceHelper.getSystemService(serviceName)
+            ?: throw IllegalStateException("System service $serviceName is not available")
+
+        // The binder that gets wrapped is the SYSTEM SERVICE binder, never Shizuku's
+        // own binder: the wrapper makes every transaction go through the Shizuku
+        // server (which runs as shell), so the system service sees shell as the
+        // caller. Passing Shizuku's binder straight to Stub.asInterface() addresses a
+        // completely different interface and every call fails.
+        val binder: IBinder = ShizukuBinderWrapper(remote)
         val stub = Class.forName(stubClassName)
-        val binder: IBinder = Shizuku.getBinder()
-            ?: throw IllegalStateException("Shizuku binder is not available")
         val asInterface: Method = stub.getMethod("asInterface", IBinder::class.java)
         return asInterface.invoke(null, binder)
             ?: throw IllegalStateException("asInterface returned null for $stubClassName")

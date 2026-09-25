@@ -12,6 +12,34 @@ codec (malformed package names never reach a shell command), the action registry
 (stable ids) and the batch dispatcher (ordering, per-app failures, progress,
 stop-the-batch behaviour).
 
+## Self-test on the device (Shizuku screen)
+
+BatchKit's Shizuku screen has a **Run self-test** button. It runs the same probes in
+the app process and in the `:privileged` process and prints both reports:
+
+```
+[app process]
+process: com.batchkit.app
+shizuku binder: alive
+permission: granted
+hidden api exemptions: true
+system services:
+  activity -> IActivityManager ok
+  package -> IPackageManager ok
+  appops -> IAppOpsService ok
+  deviceidle -> IDeviceIdleController ok
+  notification -> INotificationManager ok
+shell bridge: ok, uid 2000
+
+[privileged process]
+...
+```
+
+Use it before reporting a problem: the pair of reports separates "Shizuku is not
+connected", "the privileged process never got the binder" and "a system service is
+missing on this ROM", which otherwise all look the same from the UI ("0 out of x
+successful"). The report is copyable straight from the screen.
+
 ## Launch check on a real system image (CI)
 
 The `Launch on a device image` job in `.github/workflows/build.yml` boots an Android
